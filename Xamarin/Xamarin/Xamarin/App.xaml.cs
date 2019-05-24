@@ -17,11 +17,13 @@ namespace Xamarin
         protected override void OnStart()
         {
             // Handle when your app starts
+            
         }
 
         protected override void OnSleep()
         {
             // Handle when your app sleeps
+            DependencyService.Get<IBackgroundScheduler>().ScheduleBackground(3000);
         }
 
         protected override void OnResume()

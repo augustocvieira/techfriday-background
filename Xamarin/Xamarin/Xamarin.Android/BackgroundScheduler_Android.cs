@@ -19,18 +19,23 @@ namespace Xamarin.Droid
 {
     public class BackgroundScheduler_Android : IBackgroundScheduler
     {
-        public async Task ScheduleBackground()
+        private long _interval;
+        public void ScheduleBackground(long interval)
         {
-            var job = new JobInfo()
-            {
-                Name = "Back",
-                Type = typeof(BackgroundAPIJob),
-                BatteryNotLow = true,
-                RequiredNetwork = NetworkType.WiFi,                
-                Repeat = true
-            };
+            _interval = interval;
+            SetAlarmForBackgroundServices(CrossCurrentActivity.Current.AppContext);
+        }
 
-            CrossJobs.Current.Schedule(job);
+        private void SetAlarmForBackgroundServices(Context context)
+        {
+            var alarmIntent = new Intent(context.ApplicationContext, typeof(AlarmReceiver));
+            var broadcast = PendingIntent.GetBroadcast(context.ApplicationContext, 0, alarmIntent, PendingIntentFlags.NoCreate);
+            if (broadcast == null)
+            {
+                var pendingIntent = PendingIntent.GetBroadcast(context.ApplicationContext, 0, alarmIntent, 0);
+                var alarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
+                alarmManager.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime(), _interval, pendingIntent);
+            }
         }
     }
 }

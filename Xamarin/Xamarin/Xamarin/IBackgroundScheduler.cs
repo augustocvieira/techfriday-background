@@ -7,6 +7,6 @@ namespace Xamarin
 {
     public interface IBackgroundScheduler
     {
-        Task ScheduleBackground();
+        void ScheduleBackground(long interval);
     }
 }
