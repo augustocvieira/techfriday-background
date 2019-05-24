@@ -9,7 +9,7 @@ namespace Xamarin.Droid
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            //MainActivity.SetAlarmForBackgroundServices(context);
+            //MainActivity.ScheduleServiceWork(context);
         }
     }
 }

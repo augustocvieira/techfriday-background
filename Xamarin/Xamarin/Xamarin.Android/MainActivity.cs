@@ -34,7 +34,7 @@ namespace Xamarin.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        //public static void SetAlarmForBackgroundServices(Context context)
+        //public static void ScheduleServiceWork(Context context)
         //{
         //    var alarmIntent = new Intent(context.ApplicationContext, typeof(AlarmReceiver));
         //    var broadcast = PendingIntent.GetBroadcast(context.ApplicationContext, 0, alarmIntent, PendingIntentFlags.NoCreate);

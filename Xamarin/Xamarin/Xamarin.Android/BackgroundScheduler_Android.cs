@@ -13,6 +13,10 @@ using Xamarin.Forms;
 using System;
 using Plugin.CurrentActivity;
 using Plugin.Jobs;
+using Xamarin.Essentials;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Plugin.LocalNotifications;
 
 [assembly: Dependency (typeof(Xamarin.Droid.BackgroundScheduler_Android))]
 namespace Xamarin.Droid
@@ -20,13 +24,15 @@ namespace Xamarin.Droid
     public class BackgroundScheduler_Android : IBackgroundScheduler
     {
         private long _interval;
+        private readonly string _apiKey = "PhlNNVrhYhmshFPcTwUjl5jvkTEup1JYM5ejsnmTFoGZhU8DLk";
         public void ScheduleBackground(long interval)
         {
             _interval = interval;
-            SetAlarmForBackgroundServices(CrossCurrentActivity.Current.AppContext);
+            ScheduleServiceWork(CrossCurrentActivity.Current.AppContext);
+            //SchedulePluginJob();
         }
 
-        private void SetAlarmForBackgroundServices(Context context)
+        private void ScheduleServiceWork(Context context)
         {
             var alarmIntent = new Intent(context.ApplicationContext, typeof(AlarmReceiver));
             var broadcast = PendingIntent.GetBroadcast(context.ApplicationContext, 0, alarmIntent, PendingIntentFlags.NoCreate);
@@ -37,5 +43,18 @@ namespace Xamarin.Droid
                 alarmManager.SetRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime(), _interval, pendingIntent);
             }
         }
+
+        private async void SchedulePluginJob()
+        {
+            var job = new JobInfo()
+            {
+                Name = "BackgroundAPIJob",
+                Type = typeof(BackgroundAPIJob),
+                RequiredNetwork = NetworkType.Any,
+                Repeat = true
+            };
+
+            await CrossJobs.Current.Schedule(job);
+        }        
     }
 }

@@ -23,6 +23,7 @@ namespace Xamarin.Droid
 
         public override void OnCreate()
         {
+            CrossCurrentActivity.Current.Init(this);
             CrossJobs.Init(this);
             base.OnCreate();            
         }
